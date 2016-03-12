@@ -50,8 +50,9 @@ public class ContactsManager extends CordovaPlugin {
 
     if (action.equals("open")) {
 
+      Context context = this.cordova.getActivity().getApplicationContext();
       Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-      startActivityForResult(intent, 1);
+      context.startActivityForResult(intent, 1);
 
       // Context context = this.cordova.getActivity().getApplicationContext();
       // Intent intent = new Intent(Intent.ACTION_VIEW);
