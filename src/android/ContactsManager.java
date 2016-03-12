@@ -52,7 +52,7 @@ public class ContactsManager extends CordovaPlugin {
 
       Context context = this.cordova.getActivity().getApplicationContext();
       JSONObject id = (JSONObject) args.get(0);
-      Uri look = Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, id.getObject("id").toString());
+      Uri look = Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, id.getString("id"));
       Intent i = new Intent(Intent.ACTION_VIEW);
       i.setData(look); 
       context.startActivity(i);
