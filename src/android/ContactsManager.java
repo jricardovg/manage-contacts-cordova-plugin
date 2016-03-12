@@ -52,7 +52,7 @@ public class ContactsManager extends CordovaPlugin {
 
       Context context = this.cordova.getActivity().getApplicationContext();
       Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-      context.startActivityForResult(intent, 1);
+      this.cordova.getActivity().startActivityForResult(intent, 1);
 
       // Context context = this.cordova.getActivity().getApplicationContext();
       // Intent intent = new Intent(Intent.ACTION_VIEW);
