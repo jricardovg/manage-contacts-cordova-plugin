@@ -51,10 +51,11 @@ public class ContactsManager extends CordovaPlugin {
     if (action.equals("open")) {
 
       Context context = this.cordova.getActivity().getApplicationContext();
-      Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-      this.cordova.getActivity().startActivityForResult(intent, 1);
-
-      // Context context = this.cordova.getActivity().getApplicationContext();
+      JSONObject id = (JSONObject) args.get(0);
+      Uri look = Uri.withAppendedPath(Contacts.CONTENT_LOOKUP_URI, id.getObject("id").toString());
+      Intent i = new Intent(Intent.ACTION_VIEW);
+      i.setData(look); 
+      context.startActivity(i);
       // Intent intent = new Intent(Intent.ACTION_VIEW);
       // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -62,7 +63,6 @@ public class ContactsManager extends CordovaPlugin {
       // JSONObject id = (JSONObject) args.get(0);
       // Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf( id.getString("id") ));
       // intent.setData(uri);
-      // context.startActivity(intent);
       return true;
     }
 
