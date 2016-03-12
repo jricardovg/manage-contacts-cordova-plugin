@@ -27,7 +27,9 @@ public class ContactsManager extends CordovaPlugin {
 
   private JSONArray executeArgs;
 
-  public static final String ACTION_ADD_CONTACTS = "add";
+  public static final String ACTION_ADD_CONTACTS = "open";
+  public static final String ACTION_OPEN_CONTACTS = "open";
+
 
   private static final String LOG_TAG = "Manage Contacts";
 
@@ -46,7 +48,7 @@ public class ContactsManager extends CordovaPlugin {
     this.callbackContext = callbackContext;
     this.executeArgs = args;
 
-    if (action.equals("open_details")) {
+    if (action.equals("open")) {
       Context context = this.cordova.getActivity().getApplicationContext();
       Intent intent = new Intent(Intent.ACTION_VIEW);
       Log.d("respuesta log-out open_details:" ,String.valueOf(args));

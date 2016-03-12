@@ -17,6 +17,7 @@
     "cordova",
     "contacts",
     "add",
+    "open",
     "ecosystem:cordova",
     "cordova-android",
     "cordova-ios"

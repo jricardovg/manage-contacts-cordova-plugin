@@ -28,11 +28,11 @@ var argscheck = require('cordova/argscheck'),
 */
 var manageContacts = {
 
-    open_details:function(data){
+    open:function(data){
      exec(function(result){
        },
       function(result){
-      },"managecontacts", "open_details",[data]);
+      },"managecontacts", "open",[data]);
     },
 
 
