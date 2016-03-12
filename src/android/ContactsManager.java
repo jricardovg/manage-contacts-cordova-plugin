@@ -19,7 +19,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Data;
 import android.util.Log;
 import android.provider.Settings;
-import java.lang.Object.Uri;
+import android.net.Uri;
 
 public class ContactsManager extends CordovaPlugin {
 
