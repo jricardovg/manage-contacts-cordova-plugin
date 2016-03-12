@@ -51,11 +51,14 @@ public class ContactsManager extends CordovaPlugin {
     if (action.equals("open")) {
       Context context = this.cordova.getActivity().getApplicationContext();
       Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
       Log.d("respuesta log-out open_details:" ,String.valueOf(args));
       JSONObject id = (JSONObject) args.get(0);
       Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf( id.getString("id") ));
       intent.setData(uri);
       context.startActivity(intent);
+      return true;
     }
 
     if (action.equals("add")){
