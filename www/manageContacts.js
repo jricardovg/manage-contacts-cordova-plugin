@@ -28,11 +28,21 @@ var argscheck = require('cordova/argscheck'),
 */
 var manageContacts = {
 
+    open_details:function(data){
+     exec(function(result){
+       },
+      function(result){
+      },"managecontacts", "open_details",[data]);
+    },
+
+
+
+
     add:function(data){
      exec(function(result){
        },
       function(result){
-      },"ManageContacts", "add",[data]);
+      },"managecontacts", "add",[data]);
     },
 
     get_microphone_permissions:function(){

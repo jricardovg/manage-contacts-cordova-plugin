@@ -19,83 +19,94 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Contacts.Data;
 import android.util.Log;
 import android.provider.Settings;
+import java.lang.Object.Uri;
 
 public class ContactsManager extends CordovaPlugin {
 
-    private CallbackContext callbackContext;
+  private CallbackContext callbackContext;
 
-    private JSONArray executeArgs;
+  private JSONArray executeArgs;
 
-    public static final String ACTION_ADD_CONTACTS = "add";
+  public static final String ACTION_ADD_CONTACTS = "add";
 
-    private static final String LOG_TAG = "Manage Contacts";
+  private static final String LOG_TAG = "Manage Contacts";
 
-    public ContactsManager() {}
+  public ContactsManager() {}
 
-    /**
-     * Executes the request and returns PluginResult.
-     *
-     * @param action            The action to execute.
-     * @param args              JSONArray of arguments for the plugin.
-     * @param callbackContext   The callback context used when calling back into JavaScript.
-     * @return                  True if the action was valid, false otherwise.
-     */
-    public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
+  /**
+   * Executes the request and returns PluginResult.
+   *
+   * @param action            The action to execute.
+   * @param args              JSONArray of arguments for the plugin.
+   * @param callbackContext   The callback context used when calling back into JavaScript.
+   * @return                  True if the action was valid, false otherwise.
+   */
+  public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 
-        this.callbackContext = callbackContext;
-        this.executeArgs = args;
+    this.callbackContext = callbackContext;
+    this.executeArgs = args;
 
-        if (action.equals("add")){
-          Context context = this.cordova.getActivity().getApplicationContext();
+    if (action.equals("open_details")) {
+      Context context = this.cordova.getActivity().getApplicationContext();
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      Log.d("respuesta log-out open_details:" ,String.valueOf(args));
+      JSONObject id = (JSONObject) args.get(0);
+      Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf( id.getString("id") ));
+      intent.setData(uri);
+      context.startActivity(intent);
+    }
 
-          Log.d("respuesta logout:" ,String.valueOf(args));
+    if (action.equals("add")){
+      Context context = this.cordova.getActivity().getApplicationContext();
 
-          JSONObject contactData = (JSONObject) args.get(0);
-          JSONArray phoneNumbers = (JSONArray) contactData.getJSONArray("phones");
+      Log.d("respuesta logout:" ,String.valueOf(args));
+
+      JSONObject contactData = (JSONObject) args.get(0);
+      JSONArray phoneNumbers = (JSONArray) contactData.getJSONArray("phones");
 
 
-          final Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+      final Intent intent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-          if(contactData.has("name")){
-             intent.putExtra(ContactsContract.Intents.Insert.NAME, contactData.getString("name"));
+      if(contactData.has("name")){
+        intent.putExtra(ContactsContract.Intents.Insert.NAME, contactData.getString("name"));
+      }
+
+      if(phoneNumbers.length() > 0){
+        for (int i = 0; i < phoneNumbers.length(); i++) {
+          JSONObject phone = (JSONObject) phoneNumbers.get(i);
+          switch(i){
+            case 0:
+              intent.putExtra(ContactsContract.Intents.Insert.PHONE, phone.getString("number"));
+              intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+              break;
+            case 1:
+              intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, phone.getString("number"));
+              intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+              break;
+            case 2:
+              intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE, phone.getString("number"));
+              intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+              break;
           }
-
-          if(phoneNumbers.length() > 0){
-            for (int i = 0; i < phoneNumbers.length(); i++) {
-              JSONObject phone = (JSONObject) phoneNumbers.get(i);
-              switch(i){
-                case 0:
-                  intent.putExtra(ContactsContract.Intents.Insert.PHONE, phone.getString("number"));
-                  intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-                  break;
-                case 1:
-                  intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, phone.getString("number"));
-                  intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-                  break;
-                case 2:
-                  intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE, phone.getString("number"));
-                  intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-                  break;
-              }
-            }
-          }
-
-          context.startActivity(intent);
-
-          return true;
-        } else if (action.equals("switchToLocationSettings")){
-          switchToLocationSettings();
-          callbackContext.success();
         }
+      }
 
-        return false;
+      context.startActivity(intent);
+
+      return true;
+    } else if (action.equals("switchToLocationSettings")){
+      switchToLocationSettings();
+      callbackContext.success();
     }
 
-    public void switchToLocationSettings() {
-        Log.d(LOG_TAG, "Switch to Location Settings");
-        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        cordova.getActivity().startActivity(settingsIntent);
-    }
+    return false;
+  }
+
+  public void switchToLocationSettings() {
+    Log.d(LOG_TAG, "Switch to Location Settings");
+    Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    cordova.getActivity().startActivity(settingsIntent);
+  }
 
 }
